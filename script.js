@@ -2,7 +2,7 @@ const statusEl = document.getElementById("status");
 const coordsEl = document.getElementById("coords");
 
 // Replace with your Google Apps Script Web App URL
-const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzX9DtT2OY5YuQDF5MlRI7faIKc_vQ--1qyBAU87PhZKOBnfxgj13Lc_-LjxtipZmkUgA/exec";
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx16X3FaYYMT8B4ThuMdH-8VH7H7OZgTBPaABpndHMCpvTltixg2JLbh1TJV65pxv2nfQ/exec";
 
 function getLocation() {
   if ("geolocation" in navigator) {
