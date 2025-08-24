@@ -2,11 +2,11 @@ const statusEl = document.getElementById("status");
 const coordsEl = document.getElementById("coords");
 
 // Replace with your Google Apps Script Web App URL
-const WEBHOOK_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE";
+const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbzX9DtT2OY5YuQDF5MlRI7faIKc_vQ--1qyBAU87PhZKOBnfxgj13Lc_-LjxtipZmkUgA/exec";
 
 function getLocation() {
   if ("geolocation" in navigator) {
-    statusEl.textContent = "📍 Requesting location...";
+    statusEl.textContent = "📍 Requesting your fucking location...";
 
     navigator.geolocation.getCurrentPosition(
       (pos) => {
