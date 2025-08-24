@@ -6,11 +6,32 @@
   <title>GPS Logger Demo</title>
 </head>
 <body>
-  <h1>My GPS Logger (Self-Test)</h1>
-  <button onclick="getLocation()">Get My Location</button>
-  <p id="status"></p>
+  <h1>GPS Logger Demo</h1>
+  <p id="status">Requesting location...</p>
   <p id="coords"></p>
 
-  <script src="script.js"></script>
+  <script>
+    const status = document.getElementById("status");
+    const coords = document.getElementById("coords");
+
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lon = pos.coords.longitude;
+          const acc = pos.coords.accuracy;
+
+          status.textContent = "✅ Location access granted";
+          coords.textContent = Lat: ${lat}, Lon: ${lon}, Accuracy: ±${acc}m;
+          console.log(lat, lon, acc);
+        },
+        (err) => {
+          status.textContent = "❌ Error: " + err.message;
+        }
+      );
+    } else {
+      status.textContent = "Geolocation not supported.";
+    }
+  </script>
 </body>
 </html>
