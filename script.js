@@ -1,49 +1,43 @@
+const statusEl = document.getElementById("status");
+const coordsEl = document.getElementById("coords");
+
+// Replace with your Google Apps Script Web App URL
+const WEBHOOK_URL = "YOUR_GOOGLE_SCRIPT_URL_HERE";
+
 function getLocation() {
-  const status = document.getElementById("status");
-  const coords = document.getElementById("coords");
+  if ("geolocation" in navigator) {
+    statusEl.textContent = "📍 Requesting location...";
 
-  if (!navigator.geolocation) {
-    status.textContent = "Geolocation is not supported by your browser.";
-    return;
-  }
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const lat = pos.coords.latitude;
+        const lon = pos.coords.longitude;
+        const acc = pos.coords.accuracy;
 
-  status.textContent = "Requesting location...";
+        statusEl.textContent = "✅ Location access granted";
+        coordsEl.textContent = `Lat: ${lat}, Lon: ${lon}, Accuracy: ±${acc}m`;
 
-  navigator.geolocation.getCurrentPosition(
-    (position) => {
-      const latitude = position.coords.latitude;
-      const longitude = position.coords.longitude;
-      const accuracy = position.coords.accuracy;
-
-      status.textContent = "Location access granted ✅";
-      coords.textContent = Latitude: ${latitude}, Longitude: ${longitude} (±${accuracy}m);
-
-      // 🔹 Log to console (for your dev tools)
-      console.log("Lat:", latitude, "Lng:", longitude, "Accuracy:", accuracy);
-
-      // 🔹 OPTIONAL: send to your own database/server
-      /*
-      fetch("https://your-server.com/log", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ latitude, longitude, accuracy, time: Date.now() })
-      });
-      */
-    },
-    (error) => {
-      switch(error.code) {
-        case error.PERMISSION_DENIED:
-          status.textContent = "Permission denied ❌";
-          break;
-        case error.POSITION_UNAVAILABLE:
-          status.textContent = "Position unavailable.";
-          break;
-        case error.TIMEOUT:
-          status.textContent = "Request timed out.";
-          break;
-        default:
-          status.textContent = "An unknown error occurred.";
+        // Send to Google Sheets
+        fetch(WEBHOOK_URL, {
+          method: "POST",
+          body: JSON.stringify({
+            latitude: lat,
+            longitude: lon,
+            accuracy: acc
+          }),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        })
+          .then((res) => res.text())
+          .then((data) => console.log("Logged:", data))
+          .catch((err) => console.error("Error:", err));
+      },
+      (err) => {
+        statusEl.textContent = "❌ Error: " + err.message;
       }
-    }
-  );
+    );
+  } else {
+    statusEl.textContent = "⚠️ Geolocation not supported.";
+  }
 }
