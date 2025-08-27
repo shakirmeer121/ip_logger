@@ -1,15 +1,63 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Get Location</title>
+  <title>Location Logger</title>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
 </head>
 <body>
-  <h2>Your Location Info</h2>
-  <p id="status">⏳ Requesting location...</p>
-  <p id="coords"></p>
+  <h2>Location Logger</h2>
+  <p>If allowed, your location will be logged to Firebase.</p>
 
-  <script src="script.js"></script>
+  <script>
+    // ✅ Your Firebase config (replace with your own values from Firebase console)
+    const firebaseConfig = {
+  apiKey: "AIzaSyDFKnHjmhU4n4oAslqr43NhKV3EayjJiOk",
+  authDomain: "log-ip.firebaseapp.com",
+  projectId: "log-ip",
+  storageBucket: "log-ip.firebasestorage.app",
+  messagingSenderId: "445351175174",
+  appId: "1:445351175174:web:506dca3cc9ab1195418f87",
+  measurementId: "G-Y51E6L1QY5"
+};
+
+    // ✅ Initialize Firebase
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+    const analytics = getAnalytics(app);
+
+    // ✅ Function to log location
+    function logLocation(lat, lng) {
+      db.collection("locations").add({
+        latitude: lat,
+        longitude: lng,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent
+      })
+      .then(() => {
+        console.log("Location logged!");
+      })
+      .catch((error) => {
+        console.error("Error writing document: ", error);
+      });
+    }
+
+    // ✅ Ask for GPS
+    if ("geolocation" in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (pos) => {
+          const lat = pos.coords.latitude;
+          const lng = pos.coords.longitude;
+          console.log("Got location:", lat, lng);
+          logLocation(lat, lng);
+        },
+        (err) => {
+          console.error("Error getting location:", err);
+        }
+      );
+    } else {
+      console.log("Geolocation not supported.");
+    }
+  </script>
 </body>
 </html>
