@@ -2,44 +2,42 @@
 <html>
 <head>
   <title>Location Logger</title>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
-</head>
-<body>
-  <h2>Location Logger</h2>
-  <p>If allowed, your location will be logged to Firebase.</p>
+  <!-- Firebase v9 -->
+  <script type="module">
+    // Import only what you need
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js";
+    import { getFirestore, collection, addDoc } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+    import { getAnalytics } from "https://www.gstatic.com/firebasejs/9.6.10/firebase-analytics.js";
 
-  <script>
-    // ✅ Your Firebase config (replace with your own values from Firebase console)
+    // ✅ Your Firebase config
     const firebaseConfig = {
-  apiKey: "AIzaSyDFKnHjmhU4n4oAslqr43NhKV3EayjJiOk",
-  authDomain: "log-ip.firebaseapp.com",
-  projectId: "log-ip",
-  storageBucket: "log-ip.firebasestorage.app",
-  messagingSenderId: "445351175174",
-  appId: "1:445351175174:web:506dca3cc9ab1195418f87",
-  measurementId: "G-Y51E6L1QY5"
-};
+      apiKey: "AIzaSyDFKnHjmhU4n4oAslqr43NhKV3EayjJiOk",
+      authDomain: "log-ip.firebaseapp.com",
+      projectId: "log-ip",
+      storageBucket: "log-ip.firebasestorage.app",
+      messagingSenderId: "445351175174",
+      appId: "1:445351175174:web:506dca3cc9ab1195418f87",
+      measurementId: "G-Y51E6L1QY5"
+    };
 
     // ✅ Initialize Firebase
-    const app = firebase.initializeApp(firebaseConfig);
-    const db = firebase.firestore();
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
     const analytics = getAnalytics(app);
 
     // ✅ Function to log location
-    function logLocation(lat, lng) {
-      db.collection("locations").add({
-        latitude: lat,
-        longitude: lng,
-        timestamp: new Date().toISOString(),
-        userAgent: navigator.userAgent
-      })
-      .then(() => {
-        console.log("Location logged!");
-      })
-      .catch((error) => {
+    async function logLocation(lat, lng) {
+      try {
+        await addDoc(collection(db, "locations"), {
+          latitude: lat,
+          longitude: lng,
+          timestamp: new Date().toISOString(),
+          userAgent: navigator.userAgent
+        });
+        console.log("📍 Location logged!");
+      } catch (error) {
         console.error("Error writing document: ", error);
-      });
+      }
     }
 
     // ✅ Ask for GPS
@@ -52,12 +50,16 @@
           logLocation(lat, lng);
         },
         (err) => {
-          console.error("Error getting location:", err);
+          console.error("❌ Error getting location:", err);
         }
       );
     } else {
-      console.log("Geolocation not supported.");
+      console.log("⚠️ Geolocation not supported.");
     }
   </script>
+</head>
+<body>
+  <h2>Location Logger</h2>
+  <p>If allowed, your location will be logged to Firebase.</p>
 </body>
 </html>
